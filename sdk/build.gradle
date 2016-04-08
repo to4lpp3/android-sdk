@@ -50,6 +50,8 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         testHandleProfiling true
         testFunctionalTest true
+
+        consumerProguardFiles 'proguard-consumer-rules.pro'
     }
 
     buildTypes {
@@ -194,6 +196,7 @@ dependencies {
     compile 'com.android.support:support-annotations:23.1.1'
     compile 'com.firebase:firebase-client-android:1.1.1'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.6.4'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.6.4'
     compile 'com.squareup.okhttp3:okhttp:3.0.1'
     compile 'org.apache.directory.studio:org.apache.commons.io:2.4'
 }

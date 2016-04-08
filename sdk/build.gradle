@@ -37,6 +37,10 @@ android {
 
     resourcePrefix 'nest_'
 
+    lintOptions {
+      disable "InvalidPackage" // ignore complains about java.nio references
+   }
+
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 23

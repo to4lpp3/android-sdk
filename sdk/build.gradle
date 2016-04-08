@@ -78,15 +78,11 @@ android {
 }
 
 task androidJavadocs(type: Javadoc) {
-    failOnError false
     title "Nest Android SDK Documentation"
-    source = android.sourceSets.main.java.srcDirs
     options {
         links "https://docs.oracle.com/javase/7/docs/api/"
         linksOffline "https://developer.android.com/reference", "${android.sdkDirectory}/docs/reference"
     }
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-
     options.encoding "utf-8"
     if (JavaVersion.current().isJava8Compatible()) {
         options.addStringOption('Xdoclint:none', '-quiet')
@@ -200,4 +196,15 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.6.4'
     compile 'com.squareup.okhttp3:okhttp:3.0.1'
     compile 'org.apache.directory.studio:org.apache.commons.io:2.4'
+}
+
+android.libraryVariants.all { variant ->
+    if (!variant.buildType.isDebuggable()) {
+        def androidJavadocs = project.tasks['androidJavadocs']
+        androidJavadocs.configure {
+          classpath = variant.javaCompile.classpath + project.files(project.android.bootClasspath)
+          source = variant.sourceSets.collect({it.javaDirectories}).flatten()
+          dependsOn variant.javaCompile.dependsOn
+        }
+    }
 }

@@ -35,6 +35,8 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
+    resourcePrefix 'nest_'
+
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 23

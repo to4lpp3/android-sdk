@@ -79,7 +79,7 @@ String token = "abc123";
 NestToken token = getMyToken();
 
 // Authenticate with an existing token.
-nest.authWithToken(token, new NestAuthListener() {
+nest.authWithToken(token, new NestListener.AuthListener() {
   @Override
   public void onAuthSuccess() {
     // Handle success here. Start pulling from Nest API.

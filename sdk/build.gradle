@@ -35,6 +35,12 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
+    resourcePrefix 'nest_'
+
+    lintOptions {
+      disable "InvalidPackage" // ignore complains about java.nio references
+   }
+
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 23
@@ -44,6 +50,8 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         testHandleProfiling true
         testFunctionalTest true
+
+        consumerProguardFiles 'proguard-consumer-rules.pro'
     }
 
     buildTypes {
@@ -72,15 +80,11 @@ android {
 }
 
 task androidJavadocs(type: Javadoc) {
-    failOnError false
     title "Nest Android SDK Documentation"
-    source = android.sourceSets.main.java.srcDirs
     options {
         links "https://docs.oracle.com/javase/7/docs/api/"
         linksOffline "https://developer.android.com/reference", "${android.sdkDirectory}/docs/reference"
     }
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-
     options.encoding "utf-8"
     if (JavaVersion.current().isJava8Compatible()) {
         options.addStringOption('Xdoclint:none', '-quiet')
@@ -192,6 +196,18 @@ dependencies {
     compile 'com.android.support:support-annotations:23.1.1'
     compile 'com.firebase:firebase-client-android:1.1.1'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.6.4'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.6.4'
     compile 'com.squareup.okhttp3:okhttp:3.0.1'
     compile 'org.apache.directory.studio:org.apache.commons.io:2.4'
+}
+
+android.libraryVariants.all { variant ->
+    if (!variant.buildType.isDebuggable()) {
+        def androidJavadocs = project.tasks['androidJavadocs']
+        androidJavadocs.configure {
+          classpath = variant.javaCompile.classpath + project.files(project.android.bootClasspath)
+          source = variant.sourceSets.collect({it.javaDirectories}).flatten()
+          dependsOn variant.javaCompile.dependsOn
+        }
+    }
 }

@@ -21,6 +21,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -30,6 +31,7 @@ import static com.nestlabs.sdk.Utils.readBoolean;
  * Thermostat represents and contains all properties of a Nest Thermostat.
  */
 @JsonPropertyOrder(alphabetic = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Thermostat extends Device implements Parcelable {
     public static final String KEY_CAN_COOL = "can_cool";
     public static final String KEY_CAN_HEAT = "can_heat";

@@ -32,13 +32,59 @@ import static org.junit.Assert.assertNotNull;
 
 public class StructureTest {
     public static final String TEST_STRUCTURE_JSON = "/test-structure.json";
+    public static final String TEST_STRUCTURE_UNKNOWN_JSON = "/test-structure-unknown.json";
     ObjectMapper mapper = new ObjectMapper();
 
     @Test
-    public void testCreateThermostatWithJacksonMapper_shouldSetAllValuesCorrectly() {
+    public void testCreateStructureWithJacksonMapper_shouldSetAllValuesCorrectly() {
         try {
             String json = IOUtils.toString(
                     this.getClass().getResourceAsStream(TEST_STRUCTURE_JSON), "utf-8");
+            Structure structure = mapper.readValue(json, Structure.class);
+
+            assertEquals(structure.getStructureId(), "VqFabWH21nwVyd4RWgJgNb292wa7hG");
+            assertEquals(structure.getThermostats().size(), 1);
+            assertEquals(structure.getThermostats().get(0), "peyiJNo0IldT2YlIVtYaGQ");
+            assertEquals(structure.getSmokeCoAlarms().size(), 1);
+            assertEquals(structure.getSmokeCoAlarms().get(0), "RTMTKxsQTCxzVcsySOHPxKoF4OyCifrs");
+            assertEquals(structure.getCameras().size(), 1);
+            assertEquals(structure.getCameras().get(0), "awJo6rHX");
+            assertEquals(structure.getDevices().size(), 1);
+
+            assertEquals(structure.getAway(), "home");
+            assertEquals(structure.getName(), "Home");
+            assertEquals(structure.getCountryCode(), "US");
+            assertEquals(structure.getPostalCode(), "94304");
+            assertEquals(structure.getPeakPeriodStartTime(), "2015-10-31T23:59:59.000Z");
+            assertEquals(structure.getPeakPeriodEndTime(), "2015-10-31T23:59:59.000Z");
+            assertEquals(structure.getTimeZone(), "America/Los_Angeles");
+            assertNotNull(structure.getEta());
+
+            Structure.ETA eta = structure.getEta();
+            assertEquals(eta.getTripId(), "myTripHome1024");
+            assertEquals(eta.getEstimatedArrivalWindowBegin(), "2015-10-31T22:42:59.000Z");
+            assertEquals(eta.getEstimatedArrivalWindowEnd(), "2015-10-31T23:59:59.000Z");
+
+            assertEquals(structure.getRhrEnrollment(), true);
+
+            assertNotNull(structure.getWheres());
+            assertEquals(structure.getWheres().size(), 1);
+
+            Structure.Where where = structure.getWheres().get("Fqp6wJIX");
+            assertNotNull(where);
+            assertEquals(where.getWhereId(), "Fqp6wJIX");
+            assertEquals(where.getName(), "Bedroom");
+        } catch (IOException e) {
+            e.printStackTrace();
+            Assert.fail();
+        }
+    }
+
+    @Test
+    public void testCreateStructureWithJacksonMapperUnknownProperty_shouldSetAllValuesCorrectly() {
+        try {
+            String json = IOUtils.toString(
+                    this.getClass().getResourceAsStream(TEST_STRUCTURE_UNKNOWN_JSON), "utf-8");
             Structure structure = mapper.readValue(json, Structure.class);
 
             assertEquals(structure.getStructureId(), "VqFabWH21nwVyd4RWgJgNb292wa7hG");

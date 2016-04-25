@@ -33,6 +33,7 @@ public class CameraTest {
 
     public static final String TEST_CAMERA_JSON = "/test-camera.json";
     public static final String TEST_EMPTY_CAMERA = "/test-empty-camera.json";
+    public static final String TEST_CAMERA_UNKNOWN_JSON = "/test-camera-unknown.json";
 
     ObjectMapper mapper = new ObjectMapper();
 
@@ -59,6 +60,53 @@ public class CameraTest {
         try {
             String json = IOUtils.toString(
                     this.getClass().getResourceAsStream(TEST_CAMERA_JSON), "utf-8");
+            Camera camera = mapper.readValue(json, Camera.class);
+
+            assertEquals(camera.getDeviceId(), "awJo6rH");
+            assertEquals(camera.getSoftwareVersion(), "4.0");
+            assertEquals(camera.getStructureId(), "VqFabWH21nwV...");
+            assertEquals(camera.getWhereId(), "d6reb_OZTM...");
+            assertEquals(camera.getName(), "Hallway (upstairs)");
+            assertEquals(camera.getNameLong(), "Hallway Camera (upstairs)");
+            assertEquals(camera.isOnline(), true);
+
+            assertEquals(camera.getLastIsOnlineChange(), "2015-12-29T18:42:00.000Z");
+            assertEquals(camera.isVideoHistoryEnabled(), true);
+            assertEquals(camera.isStreaming(), true);
+            assertEquals(camera.isAudioInputEnabled(), true);
+            assertEquals(camera.getWebUrl(),
+                    "https://home.nest.com/cameras/device_id?auth=access_token");
+            assertEquals(camera.getAppUrl(), "nestmobile://cameras/device_id?auth=access_token");
+
+            Camera.LastEvent lastEvent = camera.getLastEvent();
+
+            String expectedWebUrl =
+                    "https://home.nest.com/cameras/device_id/cuepoints/STRING?auth=access_token";
+            String expectedAppUrl =
+                    "nestmobile://cameras/device_id/cuepoints/STRING?auth=access_token";
+            String expectedImageUrl = "STRING1/device_id/STRING2?auth=access_token";
+            String expectedAnimatedImageUrl = "STRING1/device_id/STRING2?auth=access_token";
+
+            assertEquals(lastEvent.getHasSound(), true);
+            assertEquals(lastEvent.getHasMotion(), true);
+            assertEquals(lastEvent.getStartTime(), "2015-12-29T00:00:00.000Z");
+            assertEquals(lastEvent.getEndTime(), "2015-12-29T18:42:00.000Z");
+            assertEquals(lastEvent.getUrlsExpireTime(), "2015-10-31T23:59:59.000Z");
+            assertEquals(lastEvent.getWebUrl(), expectedWebUrl);
+            assertEquals(lastEvent.getAppUrl(), expectedAppUrl);
+            assertEquals(lastEvent.getImageUrl(), expectedImageUrl);
+            assertEquals(lastEvent.getAnimatedImageUrl(), expectedAnimatedImageUrl);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Assert.fail();
+        }
+    }
+
+    @Test
+    public void testCreateCameraWithJacksonMapperUnknownProperties_shouldSetAllValuesCorrectly() {
+        try {
+            String json = IOUtils.toString(
+                    this.getClass().getResourceAsStream(TEST_CAMERA_UNKNOWN_JSON), "utf-8");
             Camera camera = mapper.readValue(json, Camera.class);
 
             assertEquals(camera.getDeviceId(), "awJo6rH");

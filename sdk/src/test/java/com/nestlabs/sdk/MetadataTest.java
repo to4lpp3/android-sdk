@@ -32,6 +32,7 @@ public class MetadataTest {
 
     public static final String TEST_METADATA_JSON = "/test-metadata.json";
     public static final String TEST_EMPTY_METADATA_JSON = "/test-empty-metadata.json";
+    public static final String TEST_METADATA_UNKNOWN_JSON = "/test-metadata-unknown.json";
     ObjectMapper mapper = new ObjectMapper();
 
     @Test
@@ -39,6 +40,21 @@ public class MetadataTest {
         try {
             String json = IOUtils.toString(
                     this.getClass().getResourceAsStream(TEST_METADATA_JSON), "utf-8").trim();
+            Metadata metadata = mapper.readValue(json, Metadata.class);
+
+            assertEquals(metadata.getAccessToken(), "c.FmDPkzyzaQeX");
+            assertEquals(metadata.getClientVersion(), 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Assert.fail();
+        }
+    }
+
+    @Test
+    public void testCreateMetadataWithJacksonMapperUnknownProperties_shouldSetAllValuesCorrectly() {
+        try {
+            String json = IOUtils.toString(this.getClass()
+                    .getResourceAsStream(TEST_METADATA_UNKNOWN_JSON), "utf-8").trim();
             Metadata metadata = mapper.readValue(json, Metadata.class);
 
             assertEquals(metadata.getAccessToken(), "c.FmDPkzyzaQeX");

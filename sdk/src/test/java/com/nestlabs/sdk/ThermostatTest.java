@@ -31,6 +31,7 @@ import static org.junit.Assert.assertFalse;
 public class ThermostatTest {
 
     public static final String TEST_THERMOSTAT_JSON = "/test-thermostat.json";
+    public static final String TEST_THERMOSTAT_UNKNOWN_JSON = "/test-thermostat-unknown.json";
     public static final String TEST_EMPTY_THERMOSTAT = "/test-empty-thermostat.json";
     ObjectMapper mapper = new ObjectMapper();
 
@@ -39,6 +40,52 @@ public class ThermostatTest {
         try {
             String json = IOUtils.toString(
                     this.getClass().getResourceAsStream(TEST_THERMOSTAT_JSON), "utf-8");
+            Thermostat thermostat = mapper.readValue(json, Thermostat.class);
+
+            assertEquals(thermostat.getDeviceId(), "peyiJNo0IldT2YlIVtYaGQ");
+            assertEquals(thermostat.getSoftwareVersion(), "4.0");
+            assertEquals(thermostat.getStructureId(), "VqFabWH21nwVyd4R...");
+            assertEquals(thermostat.getWhereId(), "UNCBGUnN24");
+            assertEquals(thermostat.getName(), "Hallway (upstairs)");
+            assertEquals(thermostat.getNameLong(), "Hallway Thermostat (upstairs)");
+            assertEquals(thermostat.isOnline(), true);
+
+            assertEquals(thermostat.getLocale(), "en-US");
+            assertEquals(thermostat.getLastConnection(), "2015-10-31T23:59:59.000Z");
+            assertEquals(thermostat.getCanCool(), true);
+            assertEquals(thermostat.getCanHeat(), true);
+            assertEquals(thermostat.isUsingEmergencyHeat(), true);
+            assertEquals(thermostat.getHasFan(), true);
+            assertEquals(thermostat.getFanTimerActive(), true);
+            assertEquals(thermostat.getFanTimerTimeout(), "2015-10-31T23:59:59.000Z");
+            assertEquals(thermostat.getHasLeaf(), true);
+            assertEquals(thermostat.getTemperatureScale(), "C");
+            assertEquals(thermostat.getTargetTemperatureF(), 72);
+            assertEquals(thermostat.getTargetTemperatureC(), 21.5, 0.01);
+            assertEquals(thermostat.getTargetTemperatureHighF(), 72);
+            assertEquals(thermostat.getTargetTemperatureHighC(), 21.5, 0.01);
+            assertEquals(thermostat.getTargetTemperatureLowF(), 64);
+            assertEquals(thermostat.getTargetTemperatureLowC(), 17.5, 0.01);
+            assertEquals(thermostat.getAwayTemperatureHighF(), 72);
+            assertEquals(thermostat.getAwayTemperatureHighC(), 21.5, 0.01);
+            assertEquals(thermostat.getAwayTemperatureLowF(), 64);
+            assertEquals(thermostat.getAwayTemperatureLowC(), 17.5, 0.01);
+            assertEquals(thermostat.getHvacMode(), "heat");
+            assertEquals(thermostat.getAmbientTemperatureF(), 72);
+            assertEquals(thermostat.getAmbientTemperatureC(), 21.5, 0.01);
+            assertEquals(thermostat.getHumidity(), 40);
+            assertEquals(thermostat.getHvacState(), "heating");
+        } catch (IOException e) {
+            e.printStackTrace();
+            Assert.fail();
+        }
+    }
+
+    @Test
+    public void testCreateThermostatWithJacksonMapperUnknownProperty_shouldSetAllValuesCorrectly() {
+        try {
+            String json = IOUtils.toString(
+                    this.getClass().getResourceAsStream(TEST_THERMOSTAT_UNKNOWN_JSON), "utf-8");
             Thermostat thermostat = mapper.readValue(json, Thermostat.class);
 
             assertEquals(thermostat.getDeviceId(), "peyiJNo0IldT2YlIVtYaGQ");

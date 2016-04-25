@@ -20,6 +20,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -30,6 +31,7 @@ import java.util.LinkedHashMap;
  * Structure represents and contains all properties of a Nest structure.
  */
 @JsonPropertyOrder(alphabetic = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public final class Structure implements Parcelable {
     public static final String KEY_STRUCTURE_ID = "structure_id";
     public static final String KEY_THERMOSTATS = "thermostats";

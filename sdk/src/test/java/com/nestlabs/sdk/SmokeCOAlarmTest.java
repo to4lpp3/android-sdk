@@ -31,6 +31,7 @@ import static org.junit.Assert.assertFalse;
 public class SmokeCOAlarmTest {
 
     public static final String TEST_SMOKEALARM_JSON = "/test-smoke-alarm.json";
+    public static final String TEST_SMOKEALARM_UNKNOWN_JSON = "/test-smoke-alarm-unknown.json";
     public static final String TEST_EMPTY_THERMOSTAT = "/test-empty-smoke-alarm.json";
     ObjectMapper mapper = new ObjectMapper();
 
@@ -39,6 +40,36 @@ public class SmokeCOAlarmTest {
         try {
             String json = IOUtils.toString(
                     this.getClass().getResourceAsStream(TEST_SMOKEALARM_JSON), "utf-8");
+            SmokeCOAlarm smokeCOAlarm = mapper.readValue(json, SmokeCOAlarm.class);
+
+            assertEquals(smokeCOAlarm.getDeviceId(), "RTMTKxsQTCxzVcsySOHPxKoF4OyCifrs");
+            assertEquals(smokeCOAlarm.getSoftwareVersion(), "1.01");
+            assertEquals(smokeCOAlarm.getStructureId(), "VqFabWH21nwVyd4RWgJgNb292wa7hG");
+            assertEquals(smokeCOAlarm.getWhereId(), "UNCBGUnN24");
+            assertEquals(smokeCOAlarm.getName(), "Hallway (upstairs)");
+            assertEquals(smokeCOAlarm.getNameLong(), "Hallway Protect (upstairs)");
+            assertEquals(smokeCOAlarm.isOnline(), true);
+            assertEquals(smokeCOAlarm.getWhereId(), "UNCBGUnN24");
+            assertEquals(smokeCOAlarm.getLocale(), "en-US");
+
+            assertEquals(smokeCOAlarm.getBatteryHealth(), "ok");
+            assertEquals(smokeCOAlarm.getCOAlarmState(), "ok");
+            assertEquals(smokeCOAlarm.getSmokeAlarmState(), "ok");
+            assertEquals(smokeCOAlarm.getUIColorState(), "gray");
+            assertEquals(smokeCOAlarm.getIsManualTestActive(), true);
+            assertEquals(smokeCOAlarm.getLastManualTestTime(), "2015-10-31T23:59:59.000Z");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Assert.fail();
+        }
+    }
+
+    @Test
+    public void testCreateSmokeAlarmWithJacksonMapperUnknownProperty_shouldSetAllValuesCorrectly() {
+        try {
+            String json = IOUtils.toString(
+                    this.getClass().getResourceAsStream(TEST_SMOKEALARM_UNKNOWN_JSON), "utf-8");
             SmokeCOAlarm smokeCOAlarm = mapper.readValue(json, SmokeCOAlarm.class);
 
             assertEquals(smokeCOAlarm.getDeviceId(), "RTMTKxsQTCxzVcsySOHPxKoF4OyCifrs");
